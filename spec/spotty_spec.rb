@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'spotty'
 
 describe Spotty do
   pending "write it"
