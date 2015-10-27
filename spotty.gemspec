@@ -10,4 +10,6 @@ Gem::Specification.new do |s|
   s.authors = ["Minh Phan"]
   s.email = "dmphan@ditto.us.com"
   s.require_paths = ["lib"]
+  s.add_development_dependency("rake", "~> 10.0")
+  s.add_development_dependency("rspec", "~> 3.0")
 end
