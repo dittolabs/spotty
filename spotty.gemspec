@@ -3,6 +3,7 @@ Gem::Specification.new do |s|
   s.version = "0.0.1"
   s.date = %q{2015-10-27}
   s.summary = %q{Generic poller designed to be used for AWS EC2 Spot Instance Termination Notices}
+  s.license = "MIT"
   s.files = [
     "lib/spotty.rb"
   ]
