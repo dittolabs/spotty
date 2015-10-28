@@ -7,27 +7,31 @@ class Spotty
     @uri = URI.parse(uri)
     @interval = opts[:interval] || 5
     @net_http = Net::HTTP
+    @continue_poll = true
   end
 
   def run
-    continue_poll = true
-    while continue_poll
-      sleep_interval = @interval
+    while @continue_poll
       begin
         res = @net_http.get_response(@uri)
-        case res
-        when Net::HTTPSuccess then
-          yield
-          continue_poll = false
-        when Net::HTTPNotFound
-          puts "404 returned. Spot not scheduled for termination"
-        else
-          puts response.value
-        end
+        handle_response(res) {yield}
       rescue Exception => e
         puts "Error for #{@uri}: #{e}"
-        continue_poll = false
+        @continue_poll = false
       end
+    end
+  end
+
+  def handle_response(res)
+    case res
+    when Net::HTTPSuccess then
+      @continue_poll = false
+      yield
+    when Net::HTTPNotFound
+      puts "404 returned. Spot not scheduled for termination"
+      sleep(@interval)
+    else
+      puts response.value
     end
   end
 end
