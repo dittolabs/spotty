@@ -9,7 +9,9 @@ gem install spotty
 
 ## Description
 
-While Spotty allows the user to poll any url they want, it was specifically designed to poll for AWS Spot Instance Termination Notices. [See Here](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/spot-interruptions.html).
+While Spotty allows the user to poll any url they want, it was specifically designed to poll for and handle AWS Spot Instance Termination Notices. [See Here](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/spot-interruptions.html).
+
+The user passes a block of code that they want to run when a spot instance termination notice is received. This code block can be used to handle graceful shutdown of running processes and cleanup tasks.
 
 ## Usage
 ```ruby
