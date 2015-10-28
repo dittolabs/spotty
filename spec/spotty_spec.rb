@@ -8,7 +8,7 @@ describe Spotty do
   describe "run" do
     context "when spot is scheduled for termination" do
       before(:each) do
-        FakeWeb.register_uri(:get, "http://www.example.com/metadata/instance-termination", :body => "Nothing", :status => ["200", "Success"])     
+        FakeWeb.register_uri(:get, "http://www.example.com/metadata/instance-termination", :body => "2015-10-01T18:01:00Z", :status => ["200", "Success"])     
         @response = Net::HTTP.get_response(URI.parse("http://www.example.com/metadata/instance-termination"))
       end
       
@@ -21,7 +21,7 @@ describe Spotty do
       end
     end
     
-    context "when spot is not scheduled for termination" do
+    context "when spot is not scheduled for termination and response is 404" do
       before(:each) do
         FakeWeb.register_uri(:get, "http://www.example.com/metadata/instance-termination", :body => "Nothing", :status => ["404", "Not Found"])     
         @response = Net::HTTP.get_response(URI.parse("http://www.example.com/metadata/instance-termination"))
@@ -29,6 +29,17 @@ describe Spotty do
       
       it "returns 404 code" do
         expect(@response.code).to eq("404")
+      end
+      
+      it "does not yield to block" do
+        expect { |b| spotty.handle_response(@response, &b)}.not_to yield_control
+      end
+    end
+    
+    context "when spot is not scheduled for termination and response is 200" do
+      before(:each) do
+        FakeWeb.register_uri(:get, "http://www.example.com/metadata/instance-termination", :body => "Not a time value", :status => ["200", "Success"])     
+        @response = Net::HTTP.get_response(URI.parse("http://www.example.com/metadata/instance-termination"))
       end
       
       it "does not yield to block" do
